@@ -1,0 +1,8 @@
+[[constraint]]
+  name = "github.com/hashicorp/vault"
+  version = "0.11.1"
+
+[prune]
+  non-go = true
+  go-tests = true
+  unused-packages = true

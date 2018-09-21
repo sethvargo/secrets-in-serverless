@@ -1,0 +1,12 @@
+[[constraint]]
+  name = "cloud.google.com/go"
+  version = "0.28.0"
+
+[[constraint]]
+  branch = "master"
+  name = "google.golang.org/genproto"
+
+[prune]
+  non-go = true
+  go-tests = true
+  unused-packages = true
