@@ -29,7 +29,7 @@ encrypted values you received earlier.
 ```text
 $ gcloud beta functions deploy encrypted-envvars \
     --runtime go111 \
-    --entry-point Secrets \
+    --entry-point F \
     --set-env-vars VAULT_ADDR=my.vault.server,VAULT_TOKEN=7xTpP9LMUMUysBEa7pdZNsFP \
     --trigger-http
 ```

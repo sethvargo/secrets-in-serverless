@@ -43,7 +43,7 @@ encrypted values you received earlier.
 ```text
 $ gcloud beta functions deploy encrypted-envvars \
     --runtime go111 \
-    --entry-point Secrets \
+    --entry-point F \
     --set-env-vars KMS_CRYPTO_KEY_ID=projects/my-project/locations/global/keyRings/serverless-apps/cryptoKeys/app1,DB_USER=CiQAePa3VEjcuknRhLX...,DB_PASS=CiQAePa3VEpDBjS2ac... \
     --trigger-http
 ```

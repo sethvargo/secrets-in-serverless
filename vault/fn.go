@@ -24,7 +24,7 @@ func init() {
 	secret, err := client.Logical().Unwrap(os.Getenv("VAULT_TOKEN"))
 	if err != nil || secret == nil || secret.Data == nil {
 		// monitoringsystem.SendAlert("...")
-		log.Fatalf("failed to unwrap: %s", err)
+		log.Fatalf("failed to unwrap secret: %#v: %s", secret, err)
 	}
 
 	data := secret.Data["data"].(map[string]interface{})
@@ -32,6 +32,6 @@ func init() {
 	password = data["password"].(string)
 }
 
-func Secrets(w http.ResponseWriter, r *http.Request) {
+func F(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, username+":"+password)
 }

@@ -8,7 +8,7 @@ function.
 ```text
 $ gcloud beta functions deploy envvars \
     --runtime go111 \
-    --entry-point Secrets \
+    --entry-point F \
     --set-env-vars DB_USER=my-user,DB_PASS=s3cr3t \
     --trigger-http
 ```

@@ -9,6 +9,6 @@ import (
 var username = os.Getenv("DB_USER")
 var password = os.Getenv("DB_PASS")
 
-func Secrets(w http.ResponseWriter, r *http.Request) {
+func F(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, username+":"+password)
 }
