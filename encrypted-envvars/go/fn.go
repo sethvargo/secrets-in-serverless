@@ -62,8 +62,8 @@ func decrypt(kms *kmsapi.KeyManagementClient, s string) (string, error) {
 }
 
 func F(w http.ResponseWriter, r *http.Request) {
-	// You could use a sync.Once and decrypt on the first call (instead of //
-	// function initialization), or you could create a new client and decrypt
-	// on every call depending on how performant your function needs to be.
+	// You could use a sync.Once and decrypt on the first call (instead of on
+	// function initialization), or you could create a new client and decrypt on
+	// every call depending on how performant your function needs to be.
 	fmt.Fprintf(w, username+":"+password)
 }

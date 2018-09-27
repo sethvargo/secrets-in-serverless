@@ -1,54 +1,98 @@
 # Encrypted Environment Variables
 
-This example shows using encrypted environment variables in a serverless function.
+This example shows how to encrypt secrets with [Google Cloud KMS][gcp-kms],
+store them in environment variables, and then decrypt them inside a serverless
+[Cloud Function][gcp-func].
 
+
+## Setup
+
+If you have not previously used cloud functions or KMS, enable the APIs:
+
+```text
+$ gcloud services enable \
+    cloudfunctions.googleapis.com \
+    cloudkms.googleapis.com
+```
 
 ## Encrypt Values
 
-First, you'll need to encrypt all your values with a KMS key:
+You need to encrypt all your values with a Google KMS key. You provide KMS the
+plaintext, and KMS encrypts the value and returns ciphertext (encrypted text).
+
+If you don't have a KMS key, you can create one first:
+
+```text
+$ gcloud kms keyrings create serverless-secrets \
+    --location global
+
+$ gcloud kms keys create app1 \
+    --location global \
+    --keyring serverless-secrets \
+    --purpose encryption
+```
+
+Encrypt your plaintext values with this key. If you are using a different
+location, keyring, or cryptokey, please use the appropriate values.
 
 ```text
 $ echo "s3cr3t" | gcloud kms encrypt \
     --location=global \
-    --keyring=serverless-apps \
+    --keyring=serverless-secrets \
     --key=app1 \
     --ciphertext-file=- \
     --plaintext-file=- \
     | base64
 ```
 
-Do this for all your plaintext values and save the ciphertext.
+Repeat this for all your plaintext values and save the ciphertext.
 
 
 ## Grant IAM Permissions
 
-Next, you'll need to grant IAM permission to the Google Cloud function to
-decrypt these values. Create a service account with the most minimal set of
-permissions. Be sure to replace `GOOGLE_CLOUD_PROJECT` with your project name.
+You need to grant IAM permission to the Google Cloud function to decrypt these
+values.
+
+Create a new service account.
 
 ```text
-$ gcloud iam service-accounts create app1-decrypter
+$ gcloud iam service-accounts create app1-kms-decrypter
 ```
+
+Grant the most minimal set of permissions to decrypt data using the KMS key
+created above. Be sure to replace `GOOGLE_CLOUD_PROJECT` with your project name.
 
 ```text
 $ gcloud kms keys add-iam-policy-binding app1 \
     --location global \
-    --keyring serverless-apps \
-    --member "serviceAccount:app1-decrypter@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com" \
+    --keyring serverless-secrets \
+    --member "serviceAccount:app1-kms-decrypter@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com" \
     --role roles/cloudkms.cryptoKeyDecrypter
 ```
 
 
 ## Deploy
 
-Finally, deploy the function. Populate all the environment variables with the
-encrypted values you received earlier.
+Deploy the function, with the attached service account. Populate the environment
+variables with the encrypted values you calculated earlier.
 
 ```text
 $ gcloud alpha functions deploy encrypted-envvars \
     --runtime go111 \
     --entry-point F \
-    --service-account app1-decrypter@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
-    --set-env-vars KMS_CRYPTO_KEY_ID=projects/my-project/locations/global/keyRings/serverless-apps/cryptoKeys/app1,DB_USER=CiQAePa3VEjcuknRhLX...,DB_PASS=CiQAePa3VEpDBjS2ac... \
+    --service-account app1-kms-decrypter@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
+    --set-env-vars KMS_CRYPTO_KEY_ID=projects/${GOOGLE_CLOUD_PROJECT}/locations/global/keyRings/serverless-secrets/cryptoKeys/app1,DB_USER=CiQAePa3VEjcuknRhLX...,DB_PASS=CiQAePa3VEpDBjS2ac... \
     --trigger-http
 ```
+
+
+## Invoke
+
+Invoke the cloud function at its invoke endpoint:
+
+```text
+$ open $(gcloud alpha functions describe encrypted-envvars --format='value(httpsTrigger.url)')
+```
+
+[gcp-kms]: https://cloud.google.com/kms
+[gcp-func]: https://cloud.google.com/functions/
