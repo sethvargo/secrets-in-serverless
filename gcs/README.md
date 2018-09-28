@@ -6,6 +6,9 @@ and then access them inside a serverless [Cloud Function][gcp-func].
 
 ## Setup
 
+[IAM for Google Cloud Functions][gcf-iam] is not yet generally available. You
+may need to [request access][gcf-iam-eap] if you are not part of the EAP.
+
 If you have not previously used cloud functions or cloud storage, enable the
 APIs:
 
@@ -64,16 +67,46 @@ Grant the most minimal set of permissions to access data. Be sure to replace
 ```text
 $ gsutil iam ch serviceAccount:app1-gcs-reader@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com:legacyObjectReader \
     gs://${GOOGLE_CLOUD_PROJECT}-serverless-secrets/app1
+
+$ gsutil iam ch serviceAccount:app1-gcs-reader@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com:legacyBucketReader \
+    gs://${GOOGLE_CLOUD_PROJECT}-serverless-secrets
 ```
 
 
 ## Deploy
 
-Deploy the function, with the attached service account. Populate the environment
-variables with the name of the GCS bucket.
+Deploy the function your language of choice. Be sure to populate the environment
+with the encrypted values and attach the corresponding service account.
+
+### Python
 
 ```text
 $ gcloud alpha functions deploy gcs \
+    --source ./python \
+    --runtime python37 \
+    --entry-point F \
+    --service-account app1-gcs-reader@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
+    --set-env-vars STORAGE_BUCKET=${GOOGLE_CLOUD_PROJECT}-serverless-secrets \
+    --trigger-http
+```
+
+### Node
+
+```text
+$ gcloud alpha functions deploy gcs \
+    --source ./node \
+    --runtime nodejs8 \
+    --entry-point F \
+    --service-account app1-gcs-reader@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
+    --set-env-vars STORAGE_BUCKET=${GOOGLE_CLOUD_PROJECT}-serverless-secrets \
+    --trigger-http
+```
+
+### Go
+
+```text
+$ gcloud alpha functions deploy gcs \
+    --source ./go \
     --runtime go111 \
     --entry-point F \
     --service-account app1-gcs-reader@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
@@ -82,13 +115,28 @@ $ gcloud alpha functions deploy gcs \
 ```
 
 
+## Authorize
+
+Make the function publicly accessible. This step is optional, but you will be
+unable to invoke the Cloud Function without adding this or a similar IAM policy.
+
+```text
+$ gcloud alpha functions add-iam-policy-binding gcs \
+    --member allUsers \
+    --role roles/cloudfunctions.invoker
+```
+
+
 ## Invoke
 
 Invoke the cloud function at its invoke endpoint:
 
 ```text
-$ open $(gcloud alpha functions describe gcs --format='value(httpsTrigger.url)')
+$ curl $(gcloud alpha functions describe gcs --format='value(httpsTrigger.url)')
+my-user:s3cr3t
 ```
 
 [gcp-gcs]: https://cloud.google.com/storage
 [gcp-func]: https://cloud.google.com/functions/
+[gcf-iam-eap]: https://bit.ly/gcf-iam-alpha
+[gcf-iam]: https://cloud.google.com/functions/docs/securing/managing-access

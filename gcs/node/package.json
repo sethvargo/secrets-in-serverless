@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@google-cloud/storage": "2.0.x"
+  }
+}

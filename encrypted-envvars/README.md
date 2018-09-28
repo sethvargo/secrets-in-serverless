@@ -7,6 +7,9 @@ store them in environment variables, and then decrypt them inside a serverless
 
 ## Setup
 
+[IAM for Google Cloud Functions][gcf-iam] is not yet generally available. You
+may need to [request access][gcf-iam-eap] if you are not part of the EAP.
+
 If you have not previously used cloud functions or KMS, enable the APIs:
 
 ```text
@@ -14,6 +17,7 @@ $ gcloud services enable \
     cloudfunctions.googleapis.com \
     cloudkms.googleapis.com
 ```
+
 
 ## Encrypt Values
 
@@ -73,11 +77,38 @@ $ gcloud kms keys add-iam-policy-binding app1 \
 
 ## Deploy
 
-Deploy the function, with the attached service account. Populate the environment
-variables with the encrypted values you calculated earlier.
+Deploy the function your language of choice. Be sure to populate the environment
+with the encrypted values and attach the corresponding service account.
+
+### Python
 
 ```text
 $ gcloud alpha functions deploy encrypted-envvars \
+    --source ./python \
+    --runtime python37 \
+    --entry-point F \
+    --service-account app1-kms-decrypter@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
+    --set-env-vars KMS_CRYPTO_KEY_ID=projects/${GOOGLE_CLOUD_PROJECT}/locations/global/keyRings/serverless-secrets/cryptoKeys/app1,DB_USER=CiQAePa3VEjcuknRhLX...,DB_PASS=CiQAePa3VEpDBjS2ac... \
+    --trigger-http
+```
+
+### Node
+
+```text
+$ gcloud alpha functions deploy encrypted-envvars \
+    --source ./node \
+    --runtime node8 \
+    --entry-point F \
+    --service-account app1-kms-decrypter@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
+    --set-env-vars KMS_CRYPTO_KEY_ID=projects/${GOOGLE_CLOUD_PROJECT}/locations/global/keyRings/serverless-secrets/cryptoKeys/app1,DB_USER=CiQAePa3VEjcuknRhLX...,DB_PASS=CiQAePa3VEpDBjS2ac... \
+    --trigger-http
+```
+
+### Go
+
+```text
+$ gcloud alpha functions deploy encrypted-envvars \
+    --source ./go \
     --runtime go111 \
     --entry-point F \
     --service-account app1-kms-decrypter@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
@@ -86,13 +117,28 @@ $ gcloud alpha functions deploy encrypted-envvars \
 ```
 
 
+## Authorize
+
+Make the function publicly accessible. This step is optional, but you will be
+unable to invoke the Cloud Function without adding this or a similar IAM policy.
+
+```text
+$ gcloud alpha functions add-iam-policy-binding encrypted-envvars \
+    --member allUsers \
+    --role roles/cloudfunctions.invoker
+```
+
+
 ## Invoke
 
 Invoke the cloud function at its invoke endpoint:
 
 ```text
-$ open $(gcloud alpha functions describe encrypted-envvars --format='value(httpsTrigger.url)')
+$ curl $(gcloud alpha functions describe encrypted-envvars --format='value(httpsTrigger.url)')
+my-user:s3cr3t
 ```
 
 [gcp-kms]: https://cloud.google.com/kms
 [gcp-func]: https://cloud.google.com/functions/
+[gcf-iam-eap]: https://bit.ly/gcf-iam-alpha
+[gcf-iam]: https://cloud.google.com/functions/docs/securing/managing-access
