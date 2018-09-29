@@ -13,14 +13,14 @@ applicable to other serverless technologies like AWS Lambda.
 Each folder has its own set of examples and README to follow. Please click on
 a folder for more information.
 
-- **[Environment variables](tree/master/envvars)** - store and retrieve secrets
-  via environment variables.
+- **[Environment variables](envvars)** - store and retrieve secrets via
+  environment variables.
 
-- **[Encrypted environment variables](tree/master/encrypted-envvars)** - store
-  and retrieve secrets via environment variables whose values are encrypted with
-  a KMS provider.
+- **[Encrypted environment variables](encrypted-envvars)** - store and retrieve
+  secrets via environment variables whose values are encrypted with a KMS
+  provider.
 
-- **[Google Cloud Storage](tree/master/gcs)** - store secrets in files on
+- **[Google Cloud Storage](gcs)** - store secrets in files on
   [Google Cloud Storage][gcp-gcs] and tightly control access via IAM.
 
 
@@ -52,5 +52,5 @@ limitations under the License.
 
 
 [post]: https://www.sethvargo.com/secrets-in-serverless
-[gcp-gcp]: https://cloud.google.com/functions
+[gcp-gcf]: https://cloud.google.com/functions
 [gcp-gcs]: https://cloud.google.com/storage
