@@ -115,24 +115,12 @@ $ gcloud alpha functions deploy gcs \
 ```
 
 
-## Authorize
-
-Make the function publicly accessible. This step is optional, but you will be
-unable to invoke the Cloud Function without adding this or a similar IAM policy.
-
-```text
-$ gcloud alpha functions add-iam-policy-binding gcs \
-    --member allUsers \
-    --role roles/cloudfunctions.invoker
-```
-
-
 ## Invoke
 
 Invoke the cloud function at its invoke endpoint:
 
 ```text
-$ curl $(gcloud alpha functions describe gcs --format='value(httpsTrigger.url)')
+$ gcloud functions call gcs
 my-user:s3cr3t
 ```
 

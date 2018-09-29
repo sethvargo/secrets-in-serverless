@@ -117,24 +117,12 @@ $ gcloud alpha functions deploy encrypted-envvars \
 ```
 
 
-## Authorize
-
-Make the function publicly accessible. This step is optional, but you will be
-unable to invoke the Cloud Function without adding this or a similar IAM policy.
-
-```text
-$ gcloud alpha functions add-iam-policy-binding encrypted-envvars \
-    --member allUsers \
-    --role roles/cloudfunctions.invoker
-```
-
-
 ## Invoke
 
 Invoke the cloud function at its invoke endpoint:
 
 ```text
-$ curl $(gcloud alpha functions describe encrypted-envvars --format='value(httpsTrigger.url)')
+$ gcloud functions call encrypted-envvars
 my-user:s3cr3t
 ```
 
