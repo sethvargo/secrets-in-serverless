@@ -23,7 +23,7 @@ def decrypt(client, s):
     if not s:
         raise ValueError('ciphertext is missing')
 
-    response = kms_client \
+    response = client \
         .projects() \
         .locations() \
         .keyRings() \
