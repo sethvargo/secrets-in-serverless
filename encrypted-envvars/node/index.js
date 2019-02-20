@@ -43,3 +43,26 @@ client.decrypt({
 exports.F = (req, res) => {
   res.send(`${username}:${password}`)
 }
+
+//
+// Alternative implementation, using Node 8+ async/await pattern
+//
+// let cache = {};
+//
+// const decrypt = async (ciphertext) => {
+//   if (!cache[ciphertext]) {
+//     const [result] = await client.decrypt({
+//       name: cryptoKeyID,
+//       ciphertext: ciphertext,
+//     });
+//     cache[ciphertext] = result.plaintext;
+//   }
+//
+//   return cache[ciphertext];
+// }
+//
+// exports.F = async (req, res) => {
+//   const username = await decrypt(process.env.DB_USER);
+//   const password = await decrypt(process.env.DB_PASS);
+//   res.send(`${username}:${password}`)
+// }
