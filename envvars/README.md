@@ -26,7 +26,7 @@ Deploy the function your language of choice.
 ### Python
 
 ```text
-$ gcloud alpha functions deploy envvars \
+$ gcloud beta functions deploy envvars \
     --source ./python \
     --runtime python37 \
     --entry-point F \
@@ -37,7 +37,7 @@ $ gcloud alpha functions deploy envvars \
 ### Node
 
 ```text
-$ gcloud alpha functions deploy envvars \
+$ gcloud beta functions deploy envvars \
     --source ./node \
     --runtime nodejs8 \
     --entry-point F \
@@ -48,7 +48,7 @@ $ gcloud alpha functions deploy envvars \
 ### Go
 
 ```text
-$ gcloud alpha functions deploy envvars \
+$ gcloud beta functions deploy envvars \
     --source ./go \
     --runtime go111 \
     --entry-point F \

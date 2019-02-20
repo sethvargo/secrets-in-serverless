@@ -83,7 +83,7 @@ with the encrypted values and attach the corresponding service account.
 ### Python
 
 ```text
-$ gcloud alpha functions deploy encrypted-envvars \
+$ gcloud beta functions deploy encrypted-envvars \
     --source ./python \
     --runtime python37 \
     --entry-point F \
@@ -95,9 +95,9 @@ $ gcloud alpha functions deploy encrypted-envvars \
 ### Node
 
 ```text
-$ gcloud alpha functions deploy encrypted-envvars \
+$ gcloud beta functions deploy encrypted-envvars \
     --source ./node \
-    --runtime node8 \
+    --runtime nodejs8 \
     --entry-point F \
     --service-account app1-kms-decrypter@${GOOGLE_CLOUD_PROJECT}.iam.gserviceaccount.com \
     --set-env-vars KMS_CRYPTO_KEY_ID=projects/${GOOGLE_CLOUD_PROJECT}/locations/global/keyRings/serverless-secrets/cryptoKeys/app1,DB_USER=CiQAePa3VEjcuknRhLX...,DB_PASS=CiQAePa3VEpDBjS2ac... \
@@ -107,7 +107,7 @@ $ gcloud alpha functions deploy encrypted-envvars \
 ### Go
 
 ```text
-$ gcloud alpha functions deploy encrypted-envvars \
+$ gcloud beta functions deploy encrypted-envvars \
     --source ./go \
     --runtime go111 \
     --entry-point F \

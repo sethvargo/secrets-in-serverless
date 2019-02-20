@@ -81,7 +81,7 @@ with the encrypted values and attach the corresponding service account.
 ### Python
 
 ```text
-$ gcloud alpha functions deploy gcs \
+$ gcloud beta functions deploy gcs \
     --source ./python \
     --runtime python37 \
     --entry-point F \
@@ -93,7 +93,7 @@ $ gcloud alpha functions deploy gcs \
 ### Node
 
 ```text
-$ gcloud alpha functions deploy gcs \
+$ gcloud beta functions deploy gcs \
     --source ./node \
     --runtime nodejs8 \
     --entry-point F \
@@ -105,7 +105,7 @@ $ gcloud alpha functions deploy gcs \
 ### Go
 
 ```text
-$ gcloud alpha functions deploy gcs \
+$ gcloud beta functions deploy gcs \
     --source ./go \
     --runtime go111 \
     --entry-point F \

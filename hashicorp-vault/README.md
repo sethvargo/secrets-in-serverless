@@ -133,7 +133,7 @@ account.
 ### Python
 
 ```text
-$ gcloud alpha functions deploy vault-batch \
+$ gcloud beta functions deploy vault-batch \
     --source ./python \
     --runtime python37 \
     --entry-point F \
@@ -145,7 +145,7 @@ $ gcloud alpha functions deploy vault-batch \
 ### Node
 
 ```text
-$ gcloud alpha functions deploy vault-batch \
+$ gcloud beta functions deploy vault-batch \
     --source ./node \
     --runtime nodejs8 \
     --entry-point F \
@@ -157,7 +157,7 @@ $ gcloud alpha functions deploy vault-batch \
 ### Go
 
 ```text
-$ gcloud alpha functions deploy vault-batch \
+$ gcloud beta functions deploy vault-batch \
     --source ./go \
     --runtime go111 \
     --entry-point F \
