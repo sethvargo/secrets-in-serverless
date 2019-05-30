@@ -22,7 +22,6 @@ let username;
 let password;
 storage.bucket(process.env.STORAGE_BUCKET).file('app1').download()
   .then(data => {
-    console.log('here');
     const j = JSON.parse(data);
     username = j.username;
     password = j.password;
